@@ -61,7 +61,7 @@ class Attention(nn.Module):
             self.layer_cls = "MHA"
 
     def forward(self, x: torch.Tensor, start_pos: int):
-        print(f'\t\t > block.{self.layer_id} attn type: {self.layer_cls}')
+        print(f' > block.{self.layer_id} attn type: {self.layer_cls}')
         return x
 
 
@@ -86,7 +86,7 @@ class Gate(nn.Module):
             self.moe_type = 'TOPK'
 
     def forward(self, x: torch.Tensor, input_ids: Optional[torch.Tensor] = None):
-        print(f'\t > block.{self.layer_id} moe type: {self.moe_type}')
+        print(f' > block.{self.layer_id} moe type: {self.moe_type}')
         return None, None
 
 
