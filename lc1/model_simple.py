@@ -30,7 +30,7 @@ class ModelArgs:
     #   0: MQA
     #   4: CSA
     # 128: HCA
-    compress_ratios = [0, 0, 4, 128, 4, 128, 4, 0]  # for switch MHA/CSA/HCA
+    compress_ratios = [0, 0, 4, 128, 4, 128, 4, 0]  # for switch MQA/CSA/HCA
     head_dim: int = 512
 
     # hc
@@ -58,7 +58,7 @@ class Attention(nn.Module):
             else:
                 self.layer_cls = "HCA"
         else:
-            self.layer_cls = "MHA"
+            self.layer_cls = "MQA"
 
     def forward(self, x: torch.Tensor, start_pos: int):
         print(f' > block.{self.layer_id} attn type: {self.layer_cls}')
