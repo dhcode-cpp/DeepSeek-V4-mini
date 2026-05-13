@@ -7,7 +7,7 @@ import math
 # @torch.jit.script
 def sparse_linear_attn_torch(
     q: torch.Tensor,          # (L, H, d)
-    kv: torch.Tensor,         # (2, L, d)
+    kv: torch.Tensor,         # (L, d)
     topk_ids: torch.Tensor,   # (L, K)
     block: int = 64,
     scale: float = None,
@@ -31,10 +31,10 @@ def sparse_linear_attn_torch(
             idxs = idxs_all[start:end]
 
             # gather
-            kv_block = kv[:, idxs] # KV 不连续
+            kv_block = kv[idxs] # KV 不连续
 
-            scores = qi @ kv_block[0].transpose(0, 1)
-            acc_o += scores @ kv_block[1]
+            scores = qi @ kv_block.transpose(0, 1)
+            acc_o += scores @ kv_block
 
         o[i] = acc_o
 
@@ -46,9 +46,11 @@ if __name__ == "__main__":
     L, H, d = 4, 8, 32
     L_compressed = 6
     
-    # QKV
+    # Q
     q = torch.randn(L, H, d)
-    kv = torch.randn(2, L + L_compressed, d) # original KV + compress KV
+    
+    # KV single head and KV-Share one-head
+    kv = torch.randn(L + L_compressed, d) # original KV + compress KV
     
     # ids
     num_win_ids = 2
