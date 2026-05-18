@@ -458,11 +458,15 @@ class Attention(nn.Module):
         self.attn_sink = nn.Parameter(torch.empty(self.n_local_heads, dtype=torch.float32))
         self.wq_a = Linear(self.dim, self.q_lora_rank)
         self.q_norm = RMSNorm(self.q_lora_rank, self.eps)
-        self.wq_b = ColumnParallelLinear(self.q_lora_rank, self.n_heads * self.head_dim)
+        self.wq_b = ColumnParallelLinear(self.q_lora_rank, 
+                                         self.n_heads * self.head_dim)
         self.wkv = Linear(self.dim, self.head_dim)
         self.kv_norm = RMSNorm(self.head_dim, self.eps)
-        self.wo_a = ColumnParallelLinear(self.n_heads * self.head_dim // self.n_groups, self.n_groups * args.o_lora_rank, dtype=torch.bfloat16)
-        self.wo_b = RowParallelLinear(self.n_groups * args.o_lora_rank, self.dim)
+        self.wo_a = ColumnParallelLinear(self.n_heads * self.head_dim // self.n_groups, 
+                                         self.n_groups * args.o_lora_rank, 
+                                         dtype=torch.bfloat16)
+        self.wo_b = RowParallelLinear(self.n_groups * args.o_lora_rank, 
+                                      self.dim)
         self.softmax_scale = self.head_dim ** -0.5
 
         if self.compress_ratio:
@@ -473,7 +477,9 @@ class Attention(nn.Module):
                 self.indexer = None
 
         kv_cache_size = args.window_size + (args.max_seq_len // self.compress_ratio if self.compress_ratio else 0)
-        self.register_buffer("kv_cache", torch.zeros(args.max_batch_size, kv_cache_size, self.head_dim), persistent=False)
+        self.register_buffer("kv_cache", torch.zeros(args.max_batch_size, 
+                                                     kv_cache_size, 
+                                                     self.head_dim), persistent=False)
         if self.compress_ratio:
             original_seq_len, rope_theta = args.original_seq_len, args.compress_rope_theta
         else:

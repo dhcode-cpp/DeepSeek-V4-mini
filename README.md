@@ -9,3 +9,4 @@ DeepSeek-V4 Lecture
 
 - [手撕 DeepSeek-V4 (1): 模型架构](https://zhuanlan.zhihu.com/p/2032043071395869284)
 - [手撕 DeepSeek-V4 (2): 注意力方案](https://zhuanlan.zhihu.com/p/2037107284803842257)
+- [手撕 DeepSeek-V4 (3): HCA(Heavily Compressed Attention)](https://zhuanlan.zhihu.com/p/2039632097103623588)
