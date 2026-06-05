@@ -55,10 +55,9 @@ if __name__ == "__main__":
     # ids
     num_win_ids = 2
     num_sparse_ids = 3
-    num_compressed_ids = 1
-    K = num_win_ids + num_sparse_ids + num_compressed_ids
+    K = num_win_ids + num_sparse_ids
     
-    topk_ids = torch.randint(0, L + L_compressed, (L, K)) 
+    topk_ids = torch.randint(0, num_win_ids + L_compressed, (L, K)) 
 
     # sparse attn
     out = sparse_linear_attn_torch(
